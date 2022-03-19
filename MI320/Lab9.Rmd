@@ -1,0 +1,154 @@
+---
+author: "Gergana Yordanova"
+date: "3/15/2022"
+title: "Lab9"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+#install.packages("gapminder")
+library(gapminder)
+?gapminder
+jobs <- read_csv("jobs.csv")
+t_passengers <- read_csv("Titanic_Passengers.csv")
+```
+
+## Part 1
+### Question 1
+The gapminder data has 1704 rows and 6 variables. The variables consist of country, continent, year, life expectancy, population, and GDP per capita. A single observation is about life expectancy, GDP per capita and the popualation by country. The source is from http://www.gapminder.org/data/. 
+
+The jobs dataset has 558 rows and 1 column. The variables consist of year, sex, occupation, people, total number of people for that year, and proportion. A single observation is about reported occupations in the United States labor force from 1850-2000. The source is from 1950. 
+
+The titanic passengers has 558 rows and 1 column. The variables consist of passenger id, survived, passenger class, first name, last name, sex, age, number of siblings,number of parents, ticket number, passenger fare, cabin, and port of Embarkation. A single observation is about the kind of passenger and its characteristics they had on the Titanic. 
+
+### Question 2
+```{r}
+jobs %>% 
+  filter(year>=1910 & year<=2000) %>%
+  filter(occupation == "Clerical Worker")%>% 
+   summarize(mean_jobs = mean(proportion, na.rm = TRUE),
+             std = sd(proportion, na.rm = TRUE))
+```
+
+### Question 3 
+```{r}
+jobs %>%
+  group_by(occupation) %>%
+  summarize(total = n_distinct(occupation),
+            total = n())
+```
+### Question 4 
+```{r}
+jobs %>%
+  group_by(occupation) %>%
+  summarize(max_proportion = max(proportion))%>% 
+  arrange(desc(max_proportion))
+```
+Farmer had the highest maximum proportion. 
+## Part 2
+
+
+### Question 5
+```{r}
+t_passengers %>%
+  ggplot(aes(Age)) + geom_histogram()
+```
+
+### Question 6
+```{r}
+t_passengers %>%
+  ggplot(aes(Age)) + geom_histogram(bins=50)
+```
+
+### Question 7
+```{r}
+t_passengers %>%
+  ggplot(aes(Age)) + geom_histogram(binwidth=5)
+```
+
+### Question 8
+
+The appearance in question 5, the graph is with the default parameters to create the histogram. The graph in question 6 has altered the bins which means there will be more bars representing the data. In question 7, the binwidth has changed so the width of the bars is thicker. 
+
+### Question 9
+```{r}
+t_passengers %>%
+  group_by(Sex) %>%
+  summarize(avg_sex = mean(Age, na.rm=T))
+```
+### Question 10 
+```{r}
+t_passengers %>%
+  group_by(Pclass) %>%
+  summarize(avg_fare = mean(Fare, na.rm=T),
+            std = sd(Fare, na.rm = TRUE),
+            total_pop = sum(Fare))
+```
+
+### Question 11
+```{r}
+t_passengers %>%
+  group_by(Pclass) %>%
+  summarize(max_fare = max(Fare))
+```
+Class 1 had the most expensive fare with a cost of 512.3292.
+
+
+```{r} 
+t_passengers %>%
+  group_by(Pclass) %>%
+  summarize(max_variability = sd(Fare)) 
+```
+Class 1 had the highest variability with standard deviation of 78.38037.
+
+```{r} 
+t_passengers %>%
+  group_by(Pclass) %>%
+  summarize(max_passenger = max(PassengerId)) 
+```
+Class 3 had the most passengers with 891 people. 
+
+## Part 2
+
+### Question 12
+```{r}
+gapminder %>% 
+  filter(continent=="Europe") %>% 
+  ggplot(aes(x=fct_rev(country), y=gdpPercap)) + 
+    geom_boxplot() + 
+    coord_flip()
+```
+
+### Question 13
+```{r}
+gapminder %>% 
+  filter(continent=="Europe") %>% 
+  ggplot(aes(x=fct_rev(country), y=gdpPercap)) + 
+    geom_boxplot() + 
+    coord_flip()
+```
+
+My answer from question 12 is the same for question 13
+
+
+### Question 14
+```{r}
+gapminder %>% 
+  filter(country %in% c("Hungary", "Iceland", 
+                        "Greece", "Switzerland")) %>% 
+  ggplot(aes(x=fct_rev(country), y=gdpPercap)) + 
+    geom_boxplot() + 
+    coord_flip()
+```
+
+### Question 15
+The line in the middle of the box plot represents the median.
+
+
+
+
+
+
+
+

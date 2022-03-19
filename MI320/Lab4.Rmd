@@ -1,0 +1,186 @@
+---
+author: "Gergana Yordanova"
+date: "2/1/2022"
+title: "Lab4"
+output: html_document
+---
+
+# Week 4 Lab
+
+## Part 1: Learn about the dataset
+
+The tidyverse library and the palmerpenguins library are loaded in the setup chunk of the Rmd file, which should not display in the HTML file.
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+### Question 1
+glimpse(penguins)
+
+### Question 3
+ There are 344 rows and 8 columns in the penguins dataset.
+
+### Question 4
+ The `island` variable contains data about which island each penguin was documented on (Biscoe, Dream or Torgersen).
+
+### Question 5
+glimpse(penguins)
+ The categorical variables are: `species`, `island`, and `sex`.
+ The numeric variables are: `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, `body_mass_g`, and `year`.
+ The glimpse() command shows information about each variable. The "dbl" and "int" variables are numeric; "fct" variables are categorical. The str() command can also be used; "factors" are categorical and "num" or "int" variables are numeric. The type of data in each variable can be inferred from the description of each variable in the documentation.
+
+
+## Part 2: Create a graph and modify its appearance
+
+### Question 6
+ The code uses the penguins dataset. 
+ The x-axis is `flipper_length_mm`, and the y-axis uses `bill_length_mm`.
+ A is the correct image. It shows a scatterplot, which is what geom_point creates.
+
+### Question 7
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_point(mapping = aes(x = flipper_length_mm, y = bill_length_mm), color="blue")
+```
+
+### Question 8
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_point(mapping = aes(x = flipper_length_mm, y = bill_length_mm, color = species))
+```
+
+### Question 9
+The three species of penguins appear to be different sizes. The Adelie are the smallest, the Chinstrap are in the middle, and the Gentoo penguins are the biggest in the dataset.
+
+
+### Part 3: Create another graph and modify its appearance
+
+### Question 10
+ The code uses the penguins dataset. 
+ The x-axis is `species`, and the y-axis is the number of penguins at each level of `species`.
+ C is the correct graph.
+
+### Question 11
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_bar(mapping = aes(x = species), fill = "blue")
+```
+
+### Question 12
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_bar(mapping = aes(x = species, fill = island))
+```
+
+### Question 13
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_bar(mapping = aes(x = species, fill = island), position="dodge")
+```
+ The only penguin that lives on multiple islands is the Adelie penguin.
+
+
+## Part 4: Try out making different kinds of graphs
+
+### Question 14: Scatterplot
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_point(mapping = aes(x = species, y = sex))
+```
+
+### Question 15: Barchart
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_bar(mapping = aes(x = species, fill = sex), position="dodge")
+```
+
+### Question 16
+ The species and sex variables are both categorical, so making a scatterplot just layers the points on top of each other at each of the different combinations of categories. It isn't possible to see how many penguins fit into each combination of the categories. The barchart allows us to see more easily how many data points (penguins) are at each combination of the categories.
+
+### Question 17
+```{r, echo=FALSE}
+ggplot(data = penguins) + 
+  geom_point(mapping = aes(x = species, y = sex), position = "jitter")
+```
+
+### Question 18
+ Jitter spreads out the points at the different combinations of the categorical variables so it is easier to see how many data points there are with that combination.
+
+
+## Part 5: Tibbles
+
+### Question 19
+jobs <- read_csv("Lab3_jobs.csv")
+
+### Question 20
+is_tibble(jobs)
+jobs
+ The above command returned TRUE, indicating that the jobs object is a tibble. I can also tell by how it displays in the console.
+
+### Question 21
+is.factor(jobs$occupation)
+ The command returned FALSE, indicating that the occupation variable is NOT a factor.
+
+### Question 22
+ One difference between a data frame and a tibble in R is that some statistical functions in R won't work on tibbles. 
+ Another is that they print out to the screen differently: tibbles are much nicer for printing to the screen, because they don't try to print out ALL the data, just the first 10 rows (by default). 
+ Data frames are part of "base R", but tibbles are part of the tidyverse.
+ Finally, when tibbles print to the screen, it displays other useful information about the dataset like the number of rows and columns, and the type of each column.
+
+
+ Extra credit
+
+analytics_raw <- read_csv("analytics_raw.csv")
+analytics_sample <- analytics_raw[sample(1:nrow(analytics_raw), "1000", replace=FALSE),]
+
+### Question 23
+```{r, echo=FALSE}
+analytics_raw <- read_csv("analytics_raw.csv")
+analytics_sample <- analytics_raw[sample(1:nrow(analytics_raw), "1000", replace=FALSE),]
+
+ggplot(data = analytics_sample) + 
+  geom_point(mapping = aes(x = hour_of_day, y = frequency))
+```
+
+### Question 24
+numeric variable: duration
+```{r, echo=FALSE}
+ggplot(data = analytics_sample) + 
+  geom_point(mapping = aes(x = hour_of_day, y = frequency, color = duration))
+```
+
+```{r, echo=FALSE}
+ggplot(data = analytics_sample) + 
+  geom_point(mapping = aes(x = hour_of_day, y = frequency, size = duration))
+```
+
+```{r, error=TRUE}
+ggplot(data = analytics_sample) + 
+  geom_point(mapping = aes(x = hour_of_day, y = frequency, shape = duration))
+```
+
+### Question 25
+ categorical variable: os
+```{r, echo=FALSE}
+ggplot(data = analytics_sample) + 
+  geom_point(mapping = aes(x = hour_of_day, y = frequency, color = os))
+ggplot(data = analytics_sample) + 
+  geom_point(mapping = aes(x = hour_of_day, y = frequency, size = os))
+ggplot(data = analytics_sample) + 
+  geom_point(mapping = aes(x = hour_of_day, y = frequency, shape = os))
+```
+
+### Question 26
+ Mapping a continuous variable to a shape gave an error, and mapping a categorical variable to both size and shape gave a warning. Shapes are discrete, so it makes sense that you can't map a shape to a continuous variable. Also if you have more categories than available shapes, you can't visually encode all of the levels of the variable. Sizes are continuous, so it makes sense that while you can map a size to a category, it might not make conceptual sense to do so unless the categories reflect ordered levels of size or magnitude in some way.
+ 
+```{r, echo=FALSE}
+ggplot(data = penguins) +  
+geom_point(aes(x =  flipper_length_mm, y = bill_length_mm ,color = species, shape = species)) +
+ labs(title="Species vs. Bill Length", caption ="Data source:Penguins", x = "Species", y ="Bill length (mm)", color = "Species") + 
+  theme(legend.position="top") + 
+  theme_minimal() + 
+  theme(legend.position="top")+ 
+  theme(plot.caption = element_text(hjust = 0))
+```

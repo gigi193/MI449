@@ -1,0 +1,11 @@
+<config>
+	<sapCode>SPRK</sapCode>
+	<version>28.0</version>
+	<productName>XD</productName>
+	<productNameForAnalytics>xd</productNameForAnalytics>
+	<actionList>CC-UI</actionList>
+	<contextID>WAM1_SPRK_28</contextID>
+	<productSize>454148108</productSize>
+	<isInAppInstaller>true</isInAppInstaller>
+	<detectAndLaunchPlanCodeList/>
+</config>

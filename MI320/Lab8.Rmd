@@ -1,0 +1,182 @@
+---
+author: "Gergana Yordanova"
+date: "3/2/2022"
+title: "lab8"
+output: html_document
+---
+
+## Part 1
+### Question 1
+```{r setup, include = FALSE}
+library(lubridate)
+library(tidyverse)
+w <- read_csv("KLAN_daily_weather_1970_2016.csv", col_types = 
+list(AWND=col_double(), TAVG=col_double()))
+```
+
+```{r}
+ read_csv("KLAN_daily_weather_1970_2016.csv", col_types = 
+list(AWND=col_double(), TAVG=col_double()))
+```
+The data could be missing because they might not have had the means to record it like the wind speed and take the average. They also may not have the formulas to take the average of the temperature. 
+### Question 2
+```{r}
+glimpse(w)
+```
+The variable called WT16 is about rain which may include freezing rain, drizzle, and freezing drizzle. 
+
+### Question 3
+```{r}
+glimpse(w)
+```
+There are 40 variables and 17,167 observations. What this data measures is the date, time, season, what month, weekday, year, week, snowfall, rain, fog, hail, smoke, thunder, tornado, and a lot of average calculations. The unit analysis varies from chr, date, dbl,and lgl. The kinds of things that is measured for this weather is where they were located, what time, and what type of weather they had. They also take averages of the different types of weather like sunshine, rail, hail, snow, wind. 
+
+## Part 2
+### Question 4
+```{r}
+w %>% 
+  filter(season=="winter") %>%
+  arrange(desc(TMAX))
+```
+
+### Question 5 
+```{r}
+w <- w %>% 
+  mutate(above_freezing= (TMAX>32))
+w
+```
+
+
+### Question 6 
+```{r}
+w %>%
+  group_by(year) %>%
+  summarize(highest_temp=sum(above_freezing==FALSE)) %>%
+  arrange(desc(highest_temp))
+```
+### Question 7
+```{r}
+w %>%
+  group_by(year) %>%
+  summarize(tot_parcipitation = sum(PRCP)) %>%
+  arrange(desc(tot_parcipitation))
+```
+## Part 3
+### Question 8
+a)
+```{r}
+w %>%
+  group_by(month,year) %>%
+  summarize(tot_sun_min = sum(TSUN)) %>%
+  arrange(desc(tot_sun_min))
+```
+b)
+```{r}
+w %>%
+  group_by(month,year) %>%
+  summarize(avg_sun_min = mean(TSUN,na.rm=T)) %>%
+  arrange(desc(avg_sun_min))
+```
+
+c) 
+```{r}
+w %>%
+  group_by(month,year) %>%
+  filter(PSUN>0) %>%
+  summarize(num=n()) %>%
+  arrange(desc(num))
+```
+### Question 9
+I think the least useful method of answering the previous question is the method found in part c. I think so because this does not show you total minutes, or average minutes, and I think one can get more meaningful results from the other two methods. Instead, it shows you the number of days that the total possible sunshine is above 0, which creates a very identical chart that does not show much constrast. 
+
+### Question 10
+```{r}
+w %>%
+  group_by(month) %>%
+  summarize(avg_sun = mean(PSUN,na.rm=T), count= n()) %>%
+  arrange(desc(avg_sun)) %>%
+  mutate(month = factor(month, levels=month)) %>%
+  ggplot(mapping=aes(x=month, y=avg_sun)) +  
+    geom_bar(stat="identity")
+```
+### Question 11 
+```{r}  
+w %>%
+  filter(year %in% c(2001,2002,2003,2004,2005,2006)) %>%
+  group_by(year) %>%
+  summarize(tot_prcp = sum(PRCP)) %>%
+  ggplot(mapping=aes(x=year, y=tot_prcp))+  
+    geom_bar(stat="identity")
+```
+
+### Question 12
+```{r} 
+# part 1 
+w %>% filter(year == 2016) %>%  
+  mutate(wind_above_10mph = AWND > 10) %>% 
+  group_by(wind_above_10mph, season) %>%  
+  summarize(num_days_in_2016 = n()) %>%  
+  mutate(denominator = sum(num_days_in_2016), 
+         percent_days_in_2016 = num_days_in_2016 / denominator * 100) 
+```
+ 
+```{r} 
+# part 2 
+w %>% filter(year == 2016) %>%  
+  mutate(wind_above_10mph = AWND > 10) %>% 
+  group_by(season, wind_above_10mph) %>%  
+  summarize(num_days_in_2016 = n()) %>%  
+  mutate(denominator = sum(num_days_in_2016), 
+         percent_days_in_2016 = num_days_in_2016 / denominator * 100) 
+```
+
+```{r} 
+# part 3 
+w %>% filter(year == 2016) %>%  
+  mutate(wind_above_10mph = AWND > 10) %>% 
+  group_by(season, wind_above_10mph) %>%  
+  summarize(num_days_in_2016 = n()) %>%  
+  ungroup() %>%  
+  mutate(denominator = sum(num_days_in_2016), 
+         percent_days_in_2016 = num_days_in_2016 / denominator * 100)
+```
+a) The difference between the 3 parts of the code are the following. In part 1, it groups the data by the wind that is above 10 mph, and shows the season that it had happened in. It has the denominator which is the first variable in the group_by to be the sum of the number of days in 2016. In part 2, it calculates the same wind above 10 mph, but this time the order of group by is changed. This means, the calculations will be different because now season is the denominator. Therefore, the percent days in 2016 has different values. In part 3, they calculate the same thing, but this time, there is an ungroup function which removes all the groupings and then mutate was used to calculate the percent days in 2016. 
+b) The difference in each of the 3 parts output varies greatly. In part 1, the denominator is based off `wind_above_10mph` so the denominator consists of high numbers. These numbers play a role in the `percent_days_in_2016` which ranges from 16.4 to 41.8. In part 2, the denominator is based on season, which creates a lower number of a denominator. This creates the variable `percent_days_in_2016` range from 17.4 to 74.7 which is a higher number than part 1. In part 3, because the groups have been ungrouped, the denominator is much higher than the other two parts. This creates percentages ranging from 4.37 to 20.8.
+
+c) In part 1, the percentages range from 16.4 to 41.8 which is in the middle from the other 2 parts. This creates different outputs from the rest because the denominator is coming from `wind_above_10mph`. In part 2, the percentages range from 17.4 to 74.7 which is the highest ranging percentages than the other 2 parts. They are different because the denominator is based on season. In part 3, the percentages range from 4.37 to 20.8 which is the lowest ranging percentages by the other 2 parts. This is because the grouping was removed, so the denominator was not based off `wind_above_10mph` or `season`.
+
+## Part 4 
+### Question 13 
+```{r} 
+library(lubridate)
+today()
+now()
+```
+
+### Question 14 
+```{r} 
+ymd("2017-02-22") 
+mdy("February 2nd, 2017") 
+mdy_hms("02/21/2017 20:22:49") 
+ymd(20170218) 
+mdy(02182017) 
+```
+
+### Question 15 
+```{r, error=TRUE} 
+w %>%
+  mutate(year1=year(date),
+         month1 = month(date, label= T, abbr=F),
+         week1 = week(date),
+         dayw = wday(date),
+         day1 = day(date))
+```
+The above code does not work but I will walk you through my thought process. I use the mutate function because I want to attach the new month, week, week day, and day at the very right hand side on the table. I then take the datetime objects and try to get the certain desired time from the date variable.
+
+### Question 16
+I think in order to know if the new columns you created to look correct is by checking that all of the dates are correctly separated from the date variable. Each column should have the appropriate number for the month, days, and the correct form of year. 
+
+
+
+
+

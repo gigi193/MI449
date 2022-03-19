@@ -1,0 +1,187 @@
+---
+author: "Gergana Yordanova"
+date: "2/8/2022"
+title: "Lab5"
+output: html_document
+---
+
+# Week 5 Lab
+```{r setup, include = FALSE}
+library(tidyverse)
+election2016 <- read_csv("Lab5_election2016_data.csv")
+```
+## Part 1
+election2016 <- read_csv("Lab5_election2016_data.csv")
+
+### Question 1
+glimpse(election2016)
+
+There are 50 rows, 13 columns
+
+This dataset is about the US election in 2016 and it takes the US population in account. 
+It contains information regarding what state was present, an abbreviation of the state, their total vote, the vote margin, the winner of each state, what type of party each state is, the percentage point difference, what region, population percentage that lived in the metropolitan area, population percentage that is not white, estimated population in 2016, the population percentage of who has voted, and if the non white percentage of the states population is over 30.
+This dataset can help answer questions like who was the winner in each state, how the votes were spread out throughout the different demographics, and what candidate won in what state.
+
+### Question 2
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points))
+```
+
+### Question 3
+- The thing that stands out is where the points are most scattered together at the top of the graph 
+- The visual pattern I notice is an overall positive correlation
+- The labels represent the people who lived in the metropolitan area and calculates the point difference between Trump and Clinton
+
+### Question 4
+The visual patterns could be interpenetrated as the people in the metropolitan areas had more difference in points between the two candidates. The more people in the metropolitan area, the higher the percentage point difference. This represents Clinton having more votes than Trump in that area
+
+### Question 5
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points))+
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)")
+```
+
+## Part 2
+
+### Question 6
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points))+
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")
+```
+
+### Question 7 
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points, color="default"))+
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")
+```
+
+### Question 8 
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points, color="default",size = 1))+
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray") 
+```
+
+
+
+### Question 9 
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points,size = 1)) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray") 
+```
+I tried changing the colors to be red and blue with the scale_color_manual line and inputting the two colors inside, but it did not make a difference in the colors
+
+
+### Question 10 
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points,color="red",size = 2)) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")+ 
+  theme_minimal()
+```
+
+### Question 11 
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points,color="red",size = 2)) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")+ 
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(30, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(-50, 30, by = 10))
+```
+
+### Question 12
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points,color="red",size = 2)) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")+ 
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(30, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(-50, 30, by = 10))  + 
+  theme(legend.position="top")+ 
+  theme(legend.title = element_blank())
+```
+
+### Question 12
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points, color="red",size = 2)) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")+ 
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(30, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(-50, 30, by = 10))  + 
+  theme(legend.position="top")+ 
+  theme(legend.title = element_blank())
+```
+ 
+## Part 2
+
+### Question 13 
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points, color="red",size = pct_non_white)) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")+ 
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(30, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(-50, 30, by = 10))  + 
+  theme(legend.position="top")+ 
+  theme(legend.title = element_blank())
+```
+
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points, color="red",alpha = pct_non_white)) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")+ 
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(30, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(-50, 30, by = 10))  + 
+  theme(legend.position="top")+ 
+  theme(legend.title = element_blank())
+```
+
+
+### Question 14
+```{r, echo=FALSE}
+ggplot(data = election2016) + 
+  geom_point(mapping = aes(x = pct_pop_metro, y = d_points, color="red",size = 2, shape="non_white_over_30_pc")) +
+  scale_color_manual(values=c("red",  "blue")) +
+ labs(title="Point Difference vs Population in Metropolitan Area", caption ="Data source: Election outcome and voting data, hate_crimes dataset, census data with state population data", x = "Point Difference (%)", y ="State Population in Metropolitan Area (%)") +
+  geom_hline(yintercept=0, color="darkgray")+ 
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(30, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(-50, 30, by = 10))  + 
+  theme(legend.position="top")+ 
+  theme(legend.title = element_blank())
+```
+
+
+### Question 15
+I think the second graph with the alpha aesthetic demonstrated the underlying pattern the best because it created a clear color contrast representing the population that is not white and voting and its outcome
+
+### Question 16
+I chose the second graph because the pattern was very visible by having different contrast to the data points. The pattern shows who voted for Clinton with the most pigment in the data point, and least pigment for Trump, demonstrating all the differences. This makes the data more clear by having percise data points that show the different shade representing non white population and their vote
+
+
+

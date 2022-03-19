@@ -1,0 +1,95 @@
+---
+author: "Gergana Yordanova"
+date: "2/22/2022"
+title: "Lab7"
+output: html_document
+---
+
+## Part 1
+
+install.packages("nycflights13")
+
+```{r setup, include = FALSE}
+library(nycflights13)   
+library(tidyverse)
+```
+
+```{r}
+flights %>% select(year:day, ends_with("delay"), distance, 
+air_time) %>% mutate(hours = air_time / 60)
+```
+
+### Question 1
+mutate() puts the new hours column at the very end of the data table on the right hand side. 
+
+### Question 2
+```{r, echo=FALSE}
+flights %>% select(air_time, arr_time, dep_time)  %>% 
+  mutate(time_diff=arr_time-dep_time)
+```
+
+### Question 3
+I see how the air time describes how long the plain was in the air. The time_diff variable represents the difference between arrival time and departure time. The time_diff is longer than the air time.
+
+### Question 4 
+```{r, echo=FALSE}
+min_since_midnight <- function(x) {
+	if ((x %% 100) > 59 || (x - x %% 100) > 2300) {
+		return(NA)
+	} else {
+		return ((x - x %% 100)/100 * 60 + x %% 100)
+	}
+}
+
+flights %>% select(air_time, arr_time, dep_time)  %>% 
+  mutate(dep_time_min=min_since_midnight(dep_time),
+         arr_time_min=min_since_midnight(arr_time))
+```
+### Question 5
+I think the output should be a bigger number since it calculates the minutes. I believe it did the right thing because when I input the dep_time for 517 (am) and calculated the minutes from 12:00 AM, I got 317 minutes.This is the number that I got for dep_time_min for that particular time. 
+
+
+## Part 2
+### Question 6
+```{r, echo=FALSE}
+flights %>%  
+   group_by(carrier) %>%  
+   summarize(avg_delay = mean(dep_delay, na.rm = TRUE)) 
+```
+### Question 7
+```{r, echo=FALSE}
+flights %>%  
+   group_by(carrier) %>%  
+   summarize(avg_delay = mean(dep_delay, na.rm = TRUE)) %>% 
+  arrange(desc(avg_delay))
+```
+The carrier that had the worst delay is F9
+
+### Question 8
+```{r, echo=FALSE}
+flights %>%  
+   group_by(carrier) %>%  
+   summarize(avg_delay = mean(dep_delay, na.rm = TRUE),
+             num_flights= n()) %>% 
+  arrange(desc(avg_delay)) 
+```
+
+### Question 9 
+```{r, echo=FALSE}
+flights %>% group_by(dest) %>% 
+  summarize(arrival_delay = sum(arr_delay, na.rm = TRUE))
+```
+
+
+### Question 10 
+```{r, echo=FALSE}
+flights %>% 
+  filter(arr_delay==10) %>%
+  group_by(flight) %>%
+  summarize(num_flights=n())
+```
+
+
+
+
+

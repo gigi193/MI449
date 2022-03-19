@@ -1,0 +1,107 @@
+---
+author: "Gergana Yordanova"
+date: "2/15/2022"
+title: "Lab6"
+output: html_document
+---
+
+install.packages("nycflights13")
+
+```{r setup, include = FALSE}
+library(nycflights13)   
+library(tidyverse)
+```
+
+## Part 1
+
+### Question 1
+```{r, echo=FALSE}
+flights %>% select(flight, carrier, dep_time, year, month, day) 
+```
+
+### Question 2
+```{r, echo=FALSE}
+flights %>% select(dep_time,dep_delay,arr_time,arr_delay)
+```
+
+### Question 3
+```{r, echo=FALSE}
+flights %>% select(contains("arr_"))
+```
+
+### Question 4
+The contain function gets the arguments that start with arr_ and prints them out, unlike select where one says what arguments they want printed
+
+## Part 2
+
+### Question 5
+```{r, echo=FALSE}
+?flights
+flights %>% filter(arr_delay >= 120)
+```
+
+### Question 6 
+### a 
+```{r, echo=FALSE}
+filter(flights,dest == "IAH" | dest == "HOU")
+```
+
+### b
+```{r, echo=FALSE}
+filter(flights,dep_delay > 60 & arr_delay < 30)
+```
+
+### Question 7 
+```{r, echo=FALSE}
+flights %>% filter(is.na(dep_time))
+```
+
+### Question 8
+Other variables that are missing data are the departures delays and arrival times. I think this data is missing because there is no departure time to begin with. So since there was no actual departure, there is no departure delay or arrival time. 
+
+
+## Part 2
+### Question 9
+```{r, echo=FALSE}
+flights %>% arrange(dep_time)
+```
+
+### Question 10 
+### a
+```{r, echo=FALSE}
+flights %>% arrange(desc(dep_delay))
+```
+
+### b
+```{r, echo=FALSE}
+flights %>% arrange(distance)
+```
+
+
+## Part 4 ?
+### Question 11
+```{r, echo=FALSE}
+flights %>% count(tailnum) %>% arrange(desc(n))
+```
+
+### Question 12
+```{r, echo=FALSE}
+flights %>% filter((month==6 & day>=21) | (month == 9 & day<=21)| (month==7)|(month==8)) %>% count(month,day)
+```
+
+### Question 13
+```{r, echo=FALSE}
+flights %>%  count(distance>100 & distance<200)
+```
+
+### Question 14
+```{r, echo=FALSE}
+flights %>% filter(air_time >420) %>% count(dest)
+```
+
+
+
+
+
+
+
